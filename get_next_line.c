@@ -1,66 +1,43 @@
 #include "get_next_line.h"
+//read malloc free
 
-char *copy_file(int fd)
+char *read_chunks(int fd, char *str)
 {
-    char *str;
-    char *res;
-    int n;
-
-    n = 0;
-    res = malloc(BUFFER_SIZE + 1);
-    str = malloc(BUFFER_SIZE + 1);
-    while(read(fd, &str[n], 1) > 0)
+    char *buffer;
+    int r;
+    
+    r = 1;
+    if (!(buffer = malloc(BUFFER_SIZE + 1)))
+        return (NULL);
+    while(!ft_strchr(str, '\n') && r != 0)
     {
-        res[n] = str[n];
-        n++;
+        r = read(fd, buffer, BUFFER_SIZE);
+        if (r == -1)
+        {
+            free(buffer);
+            return (NULL);
+        }
+        str = ft_strjoin(str, buffer);
+        printf("buffer = %s\n", buffer);
     }
-    res[n] = '\0';
-    return (res);
-}
-
-char *get_line(char *str)
-{
-    char *res;
-    int i;
-
-    i = 0;
-    res = malloc(BUFFER_SIZE + 1);
-    while(str[i] != '\n')
-    {
-        res[i] = str[i];
-        i++;
-    }
-    res[i] = '\0';
-    return(res);
+    free(buffer);
+    return str;
 }
 
 char *get_next_line(int fd)
 {
-    static char *my_buffer;
-    static int flag;
-    char *result;
+    static char *str;
 
-    if (!(result = malloc(BUFFER_SIZE + 1)))
-        return (NULL);
-    if (!my_buffer)
-    {
-        if (!(my_buffer = malloc(BUFFER_SIZE + 1)))
-            return (NULL);
-        my_buffer = copy_file(fd);
-    }
-    result = get_line(my_buffer);
-    my_buffer = ft_strnstr(my_buffer, "\n", BUFFER_SIZE + 1);
-    my_buffer++;
-    return (result);
+    str = read_chunks(fd, str);
+    printf("%s\n", str);
+    return str;
 }
 
 int main()
 {
-    int fd = open("h.txt", O_RDONLY);
-    printf("%s\n", get_next_line(fd));
-    printf("%s\n", get_next_line(fd));
-    printf("%s\n", get_next_line(fd));
-    printf("%s\n", get_next_line(fd));
-    printf("%s\n", get_next_line(fd));
+    int fd;
+    fd = open("h.txt", O_RDONLY);
+    char *str;
+    str = get_next_line(fd);
+    printf("%s\n", str);
 }
-
