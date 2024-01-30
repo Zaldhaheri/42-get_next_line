@@ -6,7 +6,7 @@
 /*   By: zaldhahe <zaldhahe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/24 18:19:18 by zaldhahe          #+#    #+#             */
-/*   Updated: 2024/01/25 18:41:29 by zaldhahe         ###   ########.fr       */
+/*   Updated: 2024/01/30 19:06:31 by zaldhahe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,7 +88,7 @@ char	*ft_strjoin(char const *s1, char const *s2)
 	j = 0;
 	len1 = ft_strlen(s1);
 	len2 = ft_strlen(s2);
-	r = malloc(sizeof(char) * (len1 + len2 + 1));
+	r = (char *) malloc(sizeof(char) * (len1 + len2 + 1));
 	if (!r)
 		return (NULL);
 	while (s1[i])
