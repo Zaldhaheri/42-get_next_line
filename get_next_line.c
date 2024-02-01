@@ -6,7 +6,7 @@
 /*   By: zaldhahe <zaldhahe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/30 17:20:01 by zaldhahe          #+#    #+#             */
-/*   Updated: 2024/01/30 19:49:08 by zaldhahe         ###   ########.fr       */
+/*   Updated: 2024/02/01 20:10:19 by zaldhahe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,9 +20,14 @@ char	*trim_line(char *line)
 	i = 0;
 	while (line[i] != '\0' && line[i] != '\n')
 		i++;
-	if (line[i] == '\0')
+	if (line[i] == '\0' || line[1] == '\0')
 		return (NULL);
 	str = ft_substr(line, i + 1, ft_strlen(line));
+	if (*str == '\0')
+	{
+		free(str);
+		return (NULL);
+	}
 	line[i + 1] = '\0';
 	return (str);
 }
@@ -43,10 +48,10 @@ char	*read_buffer(int fd, char *str, char *buffer)
 		}
 		else if (s_bytes == 0)
 			break ;
+		buffer[s_bytes] = '\0';
 		if (!str)
 			str = ft_strdup("");
 		temp = str;
-		buffer[s_bytes] = '\0';
 		str = ft_strjoin(temp, buffer);
 		free(temp);
 		temp = NULL;
@@ -63,8 +68,6 @@ char	*get_next_line(int fd)
 	char		*buffer;
 
 	buffer = (char *) malloc((BUFFER_SIZE + 1) * sizeof(char));
-	if (!buffer)
-		return (NULL);
 	if (fd < 0 || BUFFER_SIZE < 1 || read(fd, 0, 0))
 	{
 		free(buffer);
@@ -73,6 +76,8 @@ char	*get_next_line(int fd)
 		str = NULL;
 		return (NULL);
 	}
+	if (!buffer)
+		return (NULL);
 	line = read_buffer(fd, str, buffer);
 	free(buffer);
 	buffer = NULL;
@@ -88,4 +93,5 @@ char	*get_next_line(int fd)
 // 	printf("fd: %d\n", fd);
 // 	printf("gnl[1]: %s\n", get_next_line(fd));
 // 	printf("gnl[2]: %s\n", get_next_line(fd));
+// 	printf("gnl[3]: %s\n", get_next_line(fd));
 // }
